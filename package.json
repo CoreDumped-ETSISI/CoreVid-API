@@ -1,0 +1,33 @@
+{
+  "name": "corevid-api",
+  "version": "1.0.0",
+  "description": "API to control the flow of people entering and leaving CoreDumped in accordance to the health measures implemented due to Covid-19",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoreDumped-ETSISI/CoreVid-API.git"
+  },
+  "author": "Luis de la Cal García",
+  "license": "SEE LICENSE IN <LICENSE>",
+  "bugs": {
+    "url": "https://github.com/CoreDumped-ETSISI/CoreVid-API/issues"
+  },
+  "homepage": "https://github.com/CoreDumped-ETSISI/CoreVid-API#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.24.0",
+    "mongoose": "^5.6.10",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.4",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
