@@ -56,12 +56,12 @@ function getAvailableWorkspaces(req, res) {
 }
 
 function getIdealWorkspace(req, res) {
-  var findQuery = WorkspaceMember.find({available: true}).sort('priority').limit(1);
+  var findQuery = Workspace.find({available: true}).sort('priority').limit(1);
 
   findQuery.exec( (err, workspace) => {
     if (err) return res.status(500).send({ message: `Error al realizar peticion: ${err}` })
     if (!workspace) return res.status(404).send({ message: 'No hay espacios libres' })
-    return res.status(200).send({ workspace })
+    return res.status(200).send( workspace[0] )
   })
 }
 
@@ -70,6 +70,16 @@ function updateWorkspace (req, res) {
   const { workspaceId } = req.params
 
   Workspace.findByIdAndUpdate(workspaceId, updated, (err, oldWorkspace) => {
+    if (err) return res.status(500).send({ message: `Error al actualizar espacio de trabajo: ${err}` })
+    return res.status(200).send({ oldWorkspace })
+  })
+}
+
+function reserveWorkspace (req, res) {
+  const { available } = req.body
+  const { workspaceId } = req.params
+
+  Workspace.findByIdAndUpdate(workspaceId, {$set: {available: available}}, (err, oldWorkspace) => {
     if (err) return res.status(500).send({ message: `Error al actualizar espacio de trabajo: ${err}` })
     return res.status(200).send({ oldWorkspace })
   })
@@ -93,5 +103,6 @@ module.exports = {
   getAvailableWorkspaces,
   getIdealWorkspace,
   updateWorkspace,
-  deleteWorkspace
+  deleteWorkspace,
+  reserveWorkspace
 }

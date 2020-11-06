@@ -89,6 +89,17 @@ function deleteUser (req, res) {
   })
 }
 
+function getUserIdByToken(req, res) {
+  const { token } = req.body
+	service.decodeToken(token)
+		.then(response => {
+			return res.status(200).send(response.sub)
+		})
+		.catch(response => {
+			return res.status(403).send({message: 'Token no válido'})
+		})
+}
+
 module.exports = {
   createUser,
   getUser,
@@ -96,5 +107,6 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserList,
-  logUser
+  logUser,
+  getUserIdByToken
 }

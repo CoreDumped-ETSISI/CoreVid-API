@@ -9,7 +9,7 @@ function createRecord (req, res) {
   const { workspace } = req.body
   const { left } = req.body
 
-  if (!user || !workspace || !left) {
+  if (!user || !workspace) {
     return res.status(400).send({ message: 'missing params' })
   }
 
@@ -21,7 +21,10 @@ function createRecord (req, res) {
 }
 
 function getRecordList (req, res) {
-  Record.find({}, (err, records) => {
+  Record.find({})
+    .populate('user')
+    .populate('workspace')
+    .exec( (err, records) => {
     if (err) return res.status(500).send({ message: `Error al realizar la petición: ${err}` })
     if (records.length === 0) return res.status(404).send({ message: 'No existen registros' })
     return res.status(200).send(records)

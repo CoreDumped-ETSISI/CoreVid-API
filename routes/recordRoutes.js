@@ -7,7 +7,7 @@ const admin = require('../middlewares/admin')
 
 const recordController = require('../controllers/recordController')
 
-router.post('/', admin, recordController.createRecord)
+router.post('/', auth, recordController.createRecord)
 router.get('/', admin, recordController.getRecordList)
 router.get('/:recordId', admin, recordController.getRecord)
 router.get('/getByWorkspace/:name', admin, recordController.getRecordByWorkspace)

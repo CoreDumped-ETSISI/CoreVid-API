@@ -9,9 +9,10 @@ const userController = require('../controllers/userController')
 
 router.post('/', userController.createUser)
 router.post('/log', userController.logUser)
-router.get('/:userId', admin, userController.getUser)
+router.post('/getUserIdByToken', userController.getUserIdByToken)
+router.get('/getById/:userId', admin, userController.getUser)
 router.get('/getByName/:userName', admin, userController.getUserByName)
-router.get('/', admin, userController.getUserList)
+router.get('/getUsers/', admin, userController.getUserList)
 router.put('/:userId', admin, userController.updateUser)
 router.delete('/:userId', admin, userController.deleteUser)
 
