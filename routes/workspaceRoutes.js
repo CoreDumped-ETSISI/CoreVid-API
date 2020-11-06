@@ -15,6 +15,7 @@ router.get('/available', auth, workspaceController.getAvailableWorkspaces)
 router.get('/ideal/', auth, workspaceController.getIdealWorkspace)
 router.put('/:workspaceId', admin, workspaceController.updateWorkspace)
 router.put('/reserve/:workspaceId', auth, workspaceController.reserveWorkspace)
+router.get('/free/:workspaceId', auth, workspaceController.freeWorkspace)
 router.delete('/:workspaceId', admin, workspaceController.deleteWorkspace)
 
 router.get('/private', auth, (req, res) => {

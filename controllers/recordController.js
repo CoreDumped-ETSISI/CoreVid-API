@@ -2,18 +2,20 @@
 
 const Record = require('../models/record')
 const service = require('../services')
+const mongoose = require('mongoose')
 
 
 function createRecord (req, res) {
   const { user } = req.body
   const { workspace } = req.body
   const { left } = req.body
+  const { active } = req.body
 
   if (!user || !workspace) {
     return res.status(400).send({ message: 'missing params' })
   }
 
-  const record = new Record({ user, workspace, left})
+  const record = new Record({ user, workspace, left, active})
   record.save((err, recordStored) => {
     if (err) return res.status(500).send({ message: `Error al salvar la base de datos ${err}` })
     return res.status(200).send(record)
@@ -72,6 +74,30 @@ function deleteRecord (req, res) {
   })
 }
 
+
+function isUserActive(req, res) {
+  const { userId } = req.params
+
+  Record.find({user: userId.trim(), active: true})
+  .populate('user')
+    .populate('workspace')
+    .exec( (err, record) => {
+    if (err) return res.status(500).send({ message: `Error al realizar peticion: ${err}` })
+    if (!record||record.length==0) return res.status(404).send({ message: 'El usuario no tiene un espacio de trabajo activo' })
+    return res.status(200).send( record[0] )
+  })
+}
+
+function leaveUserActive (req, res) {
+  const { userId } = req.params
+
+  Record.findOneAndUpdate({user: userId.trim(), active: true}, {$set: {active: false}}, (err, record) => {
+    if (err) return res.status(500).send({ message: `Error al realizar peticion: ${err}` })
+    if (!record) return res.status(404).send({ message: 'El usuario no tiene un espacio de trabajo activo' })
+    return res.status(200).send( record )
+  })
+}
+
 module.exports = {
   createRecord,
   getRecordList,
@@ -79,4 +105,6 @@ module.exports = {
   getRecordByUser,
   getRecordByWorkspace,
   deleteRecord,
+  isUserActive,
+  leaveUserActive
 }

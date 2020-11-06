@@ -95,6 +95,15 @@ function deleteWorkspace (req, res) {
   })
 }
 
+function freeWorkspace (req, res) {
+  const { workspaceId } = req.params
+
+  Workspace.findByIdAndUpdate(workspaceId, {$set: {available: true}}, (err, oldWorkspace) => {
+    if (err) return res.status(500).send({ message: `Error al actualizar espacio de trabajo: ${err}` })
+    return res.status(200).send({ oldWorkspace })
+  })
+}
+
 module.exports = {
   createWorkspace,
   getWorkspaceList,
@@ -104,5 +113,6 @@ module.exports = {
   getIdealWorkspace,
   updateWorkspace,
   deleteWorkspace,
-  reserveWorkspace
+  reserveWorkspace,
+  freeWorkspace
 }
