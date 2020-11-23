@@ -5,6 +5,25 @@ const User = require('../models/user')
 // const bcrypt = require('bcrypt-nodejs')
 // const enume = require('../middlewares/enumStructures')
 const service = require('../services')
+const config = require('../config')
+
+function initUsers () {
+  User.find({role: 'admin'}, (err, users) => {
+    if (users === undefined || users.length === 0) {
+      const userName = 'admin'
+      const firstName = 'admin'
+      const lastName = 'admin'
+      const password = config.SECRET_TOKEN
+      const role  = 'admin'
+
+      const user = new User({ userName, firstName, lastName, role, password})
+      user.save((err, userStored) => {
+        if (err) console.log('Error al crear el administrador')
+        else console.log('Se ha creado el administrador de forma correcta')
+      })
+    }
+  })
+}
 
 function logUser (req, res) {
   const logUser = new User(req.body)
@@ -108,5 +127,6 @@ module.exports = {
   deleteUser,
   getUserList,
   logUser,
-  getUserIdByToken
+  getUserIdByToken,
+  initUsers
 }

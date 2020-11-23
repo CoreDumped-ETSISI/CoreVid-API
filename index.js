@@ -2,7 +2,9 @@ const app = require('./app')
 const http = require('http')
 const mongoose = require('mongoose')
 
+
 const config = require('./config')
+const userController = require('./controllers/userController')
 
 const port = '3003'
 let server
@@ -28,4 +30,5 @@ function onError() {
 
 function listening() {
     console.log("Connected!")
+    userController.initUsers()
 }
