@@ -16,6 +16,7 @@ const UserSchema = new Schema({
   firstName: { type: String, required: true, maxlength: 50 },
   lastName: { type: String, required: true, maxlength: 50 },
   role: { type: String, enum: enumerator.role, default: enumerator.role[1] },
+  studentId: {type: String, maxlength: 6}, 
   password: {
     type: String,
     select: false,
