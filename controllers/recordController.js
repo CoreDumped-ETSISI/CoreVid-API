@@ -114,7 +114,6 @@ function leaveAllUsers() {
   Record.updateMany({active: true}, {$set: {active: false, left: true}}, (err, records) => {
     if (err) console.log(err)
     if (!records) console.log('No hay')
-    console.log('Todo ok')
   })
 }
 

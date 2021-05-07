@@ -36,8 +36,7 @@ function listening() {
 }
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 16;
-rule.minute = 55;
+rule.hour = 0;
 rule.tz = 'Europe/Madrid';
 
 const job = schedule.scheduleJob(rule, function(){

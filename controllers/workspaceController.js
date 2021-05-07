@@ -118,7 +118,6 @@ function freeWorkspace (req, res) {
 function vacateWorkspace(workspaceId) {
   Workspace.findByIdAndUpdate(workspaceId, {$set: {available: true}}, (err, oldWorkspace) => {
     if (err) console.log('Error '+err)
-    else console.log(oldWorkspace)
   })
 }
 
@@ -129,9 +128,6 @@ function freeAll () {
       records = value
       if(records !== undefined && records.length > 0) {
         for (var i = 0; i < records.length; i++) {
-          console.log('Hola '+i)
-          console.log(records[i])
-          console.log(records[i].workspace._id)
           var id = records[i].workspace._id
           vacateWorkspace(id)
         }
