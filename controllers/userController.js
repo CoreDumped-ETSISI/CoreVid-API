@@ -16,10 +16,12 @@ function initUsers () {
       const password = config.SECRET_TOKEN
       const role  = 'admin'
 
+      console.log('contra '+password+");")
+
       const user = new User({ userName, firstName, lastName, role, password})
       user.save((err, userStored) => {
         if (err) console.log('Error al crear el administrador')
-        else console.log('Se ha creado el administrador de forma correcta')
+        else console.log('Se ha creado el administrador de forma correcta '+userStored.password)
       })
     }
   })

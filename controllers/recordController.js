@@ -98,6 +98,26 @@ function leaveUserActive (req, res) {
   })
 }
 
+function getActiveRecords (callback) {
+  console.log('Scream')
+  Record.find({active: true})
+    .populate('workspace')
+    .exec( (err, records) => {
+      if (err) callback([])
+      if (!records||records.length==0) callback([])
+      return callback(records);
+  })
+  console.log("hasta luego maricarmen")
+}
+
+function leaveAllUsers() {
+  Record.updateMany({active: true}, {$set: {active: false, left: true}}, (err, records) => {
+    if (err) console.log(err)
+    if (!records) console.log('No hay')
+    console.log('Todo ok')
+  })
+}
+
 module.exports = {
   createRecord,
   getRecordList,
@@ -106,5 +126,7 @@ module.exports = {
   getRecordByWorkspace,
   deleteRecord,
   isUserActive,
-  leaveUserActive
+  leaveUserActive,
+  getActiveRecords,
+  leaveAllUsers
 }

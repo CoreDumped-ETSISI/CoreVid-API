@@ -1,6 +1,7 @@
 'use strict'
 
 const Workspace = require('../models/workspace')
+const recordController = require('../controllers/recordController')
 const service = require('../services')
 
 
@@ -55,6 +56,14 @@ function getAvailableWorkspaces(req, res) {
   })
 }
 
+function getOccupiedWorkspaces(req, res) {
+  Workspace.find({available: false}, (err, workspace) => {
+    if (err) return res.status(500).send({ message: `Error al realizar peticion: ${err}` })
+    if (!workspace) return res.status(404).send({ message: 'No hay espacios ocupados' })
+    return res.status(200).send({ workspace })
+  })
+}
+
 function getIdealWorkspace(req, res) {
   var findQuery = Workspace.find({available: true}).sort('priority').limit(1);
 
@@ -80,7 +89,7 @@ function reserveWorkspace (req, res) {
   const { workspaceId } = req.params
 
   Workspace.findByIdAndUpdate(workspaceId, {$set: {available: available}}, (err, oldWorkspace) => {
-    if (err) return res.status(500).send({ message: `Error al actualizar espacio de trabajo: ${err}` })
+    if (err || oldWorkspace.available == false) return res.status(500).send({ message: `Error al actualizar espacio de trabajo: ${err}` })
     return res.status(200).send({ oldWorkspace })
   })
 }
@@ -102,6 +111,33 @@ function freeWorkspace (req, res) {
     if (err) return res.status(500).send({ message: `Error al actualizar espacio de trabajo: ${err}` })
     return res.status(200).send({ oldWorkspace })
   })
+
+  //must update record too
+}
+
+function vacateWorkspace(workspaceId) {
+  Workspace.findByIdAndUpdate(workspaceId, {$set: {available: true}}, (err, oldWorkspace) => {
+    if (err) console.log('Error '+err)
+    else console.log(oldWorkspace)
+  })
+}
+
+function freeAll () {
+    var records
+
+    recordController.getActiveRecords((value) => {
+      records = value
+      if(records !== undefined && records.length > 0) {
+        for (var i = 0; i < records.length; i++) {
+          console.log('Hola '+i)
+          console.log(records[i])
+          console.log(records[i].workspace._id)
+          var id = records[i].workspace._id
+          vacateWorkspace(id)
+        }
+        recordController.leaveAllUsers()
+      }
+    })
 }
 
 module.exports = {
@@ -114,5 +150,7 @@ module.exports = {
   updateWorkspace,
   deleteWorkspace,
   reserveWorkspace,
-  freeWorkspace
+  freeWorkspace,
+  getOccupiedWorkspaces,
+  freeAll
 }

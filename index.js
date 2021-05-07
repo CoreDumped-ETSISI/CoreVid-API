@@ -1,10 +1,12 @@
 const app = require('./app')
 const http = require('http')
 const mongoose = require('mongoose')
+const schedule = require('node-schedule')
 
 
 const config = require('./config')
 const userController = require('./controllers/userController')
+const workspaceController = require('./controllers/workspaceController')
 
 const port = '3003'
 let server
@@ -32,3 +34,12 @@ function listening() {
     console.log("Connected!")
     userController.initUsers()
 }
+
+const rule = new schedule.RecurrenceRule();
+rule.hour = 16;
+rule.minute = 55;
+rule.tz = 'Europe/Madrid';
+
+const job = schedule.scheduleJob(rule, function(){
+    workspaceController.freeAll()
+});
